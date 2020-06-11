@@ -164,7 +164,7 @@
 														},
 														success : function(JSONData, status){
 															//alert(status)
-															var JSONdata = JSON.stringify(JSONData);
+															//var JSONdata = JSON.stringify(JSONData);
 															//alert(JSONdata);
 															//alert(JSONData)
 															//alert(JSONData.result)
