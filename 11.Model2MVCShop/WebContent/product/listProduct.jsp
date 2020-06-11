@@ -98,10 +98,8 @@ $(function(){
 	$(window).scroll(function() {
                 // 맨 밑으로 스크롤이 갔을경우 if문을 탑니다.
                 if($(window).scrollTop() == $(document).height() - $(window).height()) {
-                		if(page == null){
+                		if(page == null || page ==""){
                 			page = 1;
-                		}else if(page == 1){
-                			page = 2;
                 		}
                 		page++;
                 		
@@ -123,16 +121,25 @@ $(function(){
     									//alert(JSONdata)
     									//alert("JSONData : \n"+JSONData);
     									for(var i = 0; i<JSONData.list.length; i++){
-    									var displayValue = "<h6>"
+    									var displayValue = "<tr>"
+    									+"<td align=\"center\"></td>"
+    									+"<c:if test="+JSONData.list[i].proTranCode==null+"><td align=\"left\" class=\"prodName\" data-prodno=\""+JSONData.list[i].prodNo+"\">"+JSONData.list[i].prodName+"</td></c:if>"
+    									+"<c:if test="+JSONData.list[i].proTranCode!=null+"><td align=\"left\">"+JSONData.list[i].prodName+"</td></c:if>"
+    									+"<td align=\"left\">"+JSONData.list[i].price+"</td>"
+    									+"<td align=\"left\">"+JSONData.list[i].regDate+"</td>"
+    									+"<td align=\"left\"></td>"
+    									+"<td align=\"left\"></td>"
+    								 	+"</tr>";	
+    										/* "<h6>"
     																+"상   품   명 : "+JSONData.list[i].prodName+"<br/>"
     																+"상품이미지 : <img src=\"../images/uploadFiles/"+JSONData.list[i].fileName+"\"><br/>"
     																+"가         격 : "+JSONData.list[i].price+"<br/>"
     																+"상 품 정 보 : "+JSONData.list[i].prodDetail+"<br/>"
     																+"제 조 일 자 : "+JSONData.list[i].manuDate+"<br/>"
     																+"등   록   일 : "+JSONData.list[i].regDate+"<br/>"
-    																+"</h6>";						
+    																+"</h6>";	 */					
     									//alert(displayValue);
-    									$( ".plusProd" ).append(displayValue);
+    									$( "#plusProd" ).append(displayValue);
     									}
     								}
                 				})
@@ -269,7 +276,10 @@ $(function(){
 <jsp:include page="../common/pageNavigator_new.jsp"/>
 <!--  페이지 Navigator 끝 -->
 
-<div class="plusProd"></div>
+<div class="container">
+<table id="plusProd" class="table table-hover table-striped">
+</table>
+</div>
 </body>
 </html>
 
