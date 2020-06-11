@@ -36,6 +36,12 @@ function fncGetList(currentPage){
 	$("form").attr("mehtd", "POST").attr("action", "/product/listProduct").submit()
 }
 
+//스크롤로 추가된 부분 펑션으로 작동되게함
+function moveProduct(prodNo){
+	var menu = $(".mN").val().trim()
+	self.location = "/product/getProduct?prodNo="+prodNo+"&menu="+menu
+}
+
 $(function(){
 	
 	var menu = $(".mN").val().trim()
@@ -49,7 +55,7 @@ $(function(){
 	})
 	
 	$("button:contains('검색')").on("click", function(){
-		javascript:fncGetList('1')
+		fncGetList('1')
 	})
 	
 	$(".prodName").css("color","green")
@@ -98,6 +104,7 @@ $(function(){
 	$(window).scroll(function() {
                 // 맨 밑으로 스크롤이 갔을경우 if문을 탑니다.
                 if($(window).scrollTop() == $(document).height() - $(window).height()) {
+                	
                 		if(page == null || page ==""){
                 			page = 1;
                 		}
@@ -121,29 +128,24 @@ $(function(){
     									//alert(JSONdata)
     									//alert("JSONData : \n"+JSONData);
     									for(var i = 0; i<JSONData.list.length; i++){
+    									var result = "";
+    										if(JSONData.list[i].proTranCode==null){
+    											result = "<td align=\"left\" style=\"color:green\" onclick=\"moveProduct("+JSONData.list[i].prodNo+")\" class=\"prodName\" >"+JSONData.list[i].prodName+"</td>"
+    										}else{
+    											result = "><td align=\"left\">"+JSONData.list[i].prodName+"</td>"
+    										}
     									var displayValue = "<tr>"
     									+"<td align=\"center\"></td>"
-    									+"<c:if test="+JSONData.list[i].proTranCode==null+"><td align=\"left\" class=\"prodName\" data-prodno=\""+JSONData.list[i].prodNo+"\">"+JSONData.list[i].prodName+"</td></c:if>"
-    									+"<c:if test="+JSONData.list[i].proTranCode!=null+"><td align=\"left\">"+JSONData.list[i].prodName+"</td></c:if>"
+    									+result
     									+"<td align=\"left\">"+JSONData.list[i].price+"</td>"
     									+"<td align=\"left\">"+JSONData.list[i].regDate+"</td>"
     									+"<td align=\"left\"></td>"
     									+"<td align=\"left\"></td>"
-    								 	+"</tr>";	
-    										/* "<h6>"
-    																+"상   품   명 : "+JSONData.list[i].prodName+"<br/>"
-    																+"상품이미지 : <img src=\"../images/uploadFiles/"+JSONData.list[i].fileName+"\"><br/>"
-    																+"가         격 : "+JSONData.list[i].price+"<br/>"
-    																+"상 품 정 보 : "+JSONData.list[i].prodDetail+"<br/>"
-    																+"제 조 일 자 : "+JSONData.list[i].manuDate+"<br/>"
-    																+"등   록   일 : "+JSONData.list[i].regDate+"<br/>"
-    																+"</h6>";	 */					
-    									//alert(displayValue);
+    								 	+"</tr>";
     									$( "#plusProd" ).append(displayValue);
     									}
     								}
                 				})
-                		
                 }
             }); 
  	//////
@@ -199,7 +201,8 @@ $(function(){
 				
 				<div class="form-group">
 					<label class="sr-only" for="searchKeyword">검색어</label>
-					<input type="text" id="searchKeyword" name="searchKeyword" value="${search.searchKeyword}" class="form-control" placeholder="검색어" />
+					<input type="text" class="form-control" id="searchKeyword" name="searchKeyword"  placeholder="검색어"
+				    			 value="${! empty search.searchKeyword ? search.searchKeyword : '' }"  >
 				</div>
 				
 				<button type="button" class="btn btn-default">검색</button>

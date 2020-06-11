@@ -55,8 +55,9 @@
 		 $(function() {
 			 //==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
 			 //$( "button.btn.btn-default" ).on("click" , function() {
-			//	fncGetUserList(1);
-			//});
+			$( "button:contains('검색')" ).on("click" , function() {
+				 fncGetList(1);
+			});
 		 });
 		
 		

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.model2.mvc.service.kakao.KakaoLogin;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.User;
@@ -30,6 +31,11 @@ public class UserController {
 	@Autowired
 	@Qualifier("userServiceImpl")
 	private UserService userService;
+	
+	//kakaoLogin 
+	@Autowired
+	@Qualifier("kakaoLogin")
+	private KakaoLogin kakao;
 	//setter Method 구현 않음
 		
 	public UserController(){
@@ -155,6 +161,8 @@ public class UserController {
 		
 		System.out.println("/user/listUser : GET / POST");
 		
+		System.out.println("FIRST SEARCH : "+search);
+		
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}
@@ -173,4 +181,44 @@ public class UserController {
 		
 		return "forward:/user/listUser.jsp";
 	}
+	
+	//카카오로그인
+		@RequestMapping(value="/oauth",method=RequestMethod.GET)
+	    public String kakaologin(@RequestParam("code") String code,HttpSession session, Model model)throws Exception{
+			
+			System.out.println("kakao Login oauth get code : GET");
+			
+			String access_Token = kakao.getAccessToken(code);
+			
+			System.out.println("Controller AccessToken : "+access_Token);
+			
+			
+			//유저 정보 받아오기
+			Map<String, Object> userInfo = kakao.getUserInfo(access_Token);
+			System.out.println("login Controller : " + userInfo);
+		    
+		    //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
+		    if (userInfo.get("email") != null) {
+		        session.setAttribute("userId", userInfo.get("email"));
+		        session.setAttribute("access_Token", access_Token);
+		    }
+		    
+		    model.addAttribute("accessToken",access_Token);
+			
+			return "/user/getToken.jsp";
+	    }
+		
+	//카카오로그아웃
+		@RequestMapping(value = "/oauthLogout")
+		public String oauthLogout(HttpSession session) {
+			
+			System.out.println("kakao LOGOUT START :");
+			
+		    kakao.kakaoLogout((String)session.getAttribute("access_Token"));
+		    session.removeAttribute("access_Token");
+		    session.removeAttribute("userId");
+		    
+		    return "index.jsp";
+		}
+		///
 }
