@@ -48,7 +48,7 @@ public class KakaoLogin {
             System.out.println("responseCode : " + responseCode);
  
             //    요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             String line = "";
             String result = "";
             
@@ -92,7 +92,7 @@ public class KakaoLogin {
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
             
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             
             String result = "";
             String line = "";
@@ -124,11 +124,12 @@ public class KakaoLogin {
             //    요청에 필요한 Header에 포함될 내용
             conn.setRequestProperty("Authorization", "Bearer " + access_Token);
             conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("charset", "UTF-8");
             
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
             
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             
             String line = "";
             String result = "";
@@ -150,10 +151,12 @@ public class KakaoLogin {
             
             String nickname = (String)propertiesMap.get("nickname");
             String email = (String)kakao_account.get("email");
-            //String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            //String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            String userId = emailParsing(email);
             
-            userInfo.put("nickname", nickname);
+            //DB에 넣을 유저 정보 , id = password, nickname = name
+            userInfo.put("userId", userId);
+            userInfo.put("password", userUniqueId);
+            userInfo.put("userName", nickname);
             userInfo.put("email", email);
             
         } catch (IOException e) {
@@ -162,6 +165,18 @@ public class KakaoLogin {
         }
         
         return userInfo;
+    }
+    
+
+	///카카오 email, id로 쓰기위해 이메일 주소 파싱
+    public String emailParsing(String userId) {
+    	
+    	System.out.println("Email parsing start..");
+    	
+    	String parseUser = userId.substring(0,userId.indexOf("@"));
+    	System.out.println("pasing UserId : "+parseUser);
+    	
+    	return parseUser;
     }
 
 

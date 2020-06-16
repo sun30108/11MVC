@@ -120,6 +120,7 @@ public class UserController {
 	public String login(@ModelAttribute("user") User user , HttpSession session ) throws Exception{
 		
 		System.out.println("/user/login : POST");
+		System.out.println("user info : "+user);
 		//Business Logic
 		User dbUser=userService.getUser(user.getUserId());
 		
@@ -184,7 +185,7 @@ public class UserController {
 	
 	//카카오로그인
 		@RequestMapping(value="/oauth",method=RequestMethod.GET)
-	    public String kakaologin(@RequestParam("code") String code,HttpSession session, Model model)throws Exception{
+	    public String kakaologin(@RequestParam("code") String code,HttpSession session, Model model, HttpServletRequest request)throws Exception{
 			
 			System.out.println("kakao Login oauth get code : GET");
 			
@@ -197,15 +198,39 @@ public class UserController {
 			Map<String, Object> userInfo = kakao.getUserInfo(access_Token);
 			System.out.println("login Controller : " + userInfo);
 		    
+			//유저 정보 초기 설정
+			String password = (String)userInfo.get("password"); //user 고유id 를 비밀번호로 
+			String userName = (String)userInfo.get("userName"); //user nickNmae을 name으로
+			String userId = (String)userInfo.get("userId"); // user Email아이디를 파싱해서 앞부분을 id로
+			
 		    //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
 		    if (userInfo.get("email") != null) {
-		        session.setAttribute("userId", userInfo.get("email"));
+		        session.setAttribute("email", userInfo.get("email"));
 		        session.setAttribute("access_Token", access_Token);
 		    }
 		    
+		    //addUser 하기위해 user 정보 세팅
+		    User apiUser = new User();
+		    apiUser.setUserId(userId);
+		    apiUser.setUserName(userName);
+		    apiUser.setPassword(password);
+		    
+		    //가져온 카카오id가 db에 있으면 바로 넘어가고 없으면 추가한뒤 넘어가게
+		    if(userService.getUser(userId) == null) {
+		    	userService.addUser(apiUser);
+		    }
+		    
+		    System.out.println("APIUser Info : "+apiUser);
 		    model.addAttribute("accessToken",access_Token);
+
+		    //login logic 진행
+		    User dbUser=userService.getUser(apiUser.getUserId());
 			
-			return "/user/getToken.jsp";
+			if( apiUser.getPassword().equals(dbUser.getPassword())){
+				session.setAttribute("user", dbUser);
+			}
+			
+			return "redirect:/index.jsp";
 	    }
 		
 	//카카오로그아웃
@@ -218,7 +243,7 @@ public class UserController {
 		    session.removeAttribute("access_Token");
 		    session.removeAttribute("userId");
 		    
-		    return "index.jsp";
+		    return "/index.jsp";
 		}
 		///
 }

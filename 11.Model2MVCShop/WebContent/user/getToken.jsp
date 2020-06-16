@@ -19,7 +19,8 @@
 <body>
 
 	<div>Access_Token : ${accessToken}</div>
-	<a href="/user/oauthLogout"></a>
+	
+	<a href="/user/oauthLogout">·Î±×¾Æ¿ô</a>
 
 </body>
 
