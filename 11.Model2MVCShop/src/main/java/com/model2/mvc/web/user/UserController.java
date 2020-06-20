@@ -205,6 +205,9 @@ public class UserController {
 			
 		    //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
 		    if (userInfo.get("email") != null) {
+		    	System.out.println("Session SAVE");
+		    	System.out.println(userInfo.get("email"));
+		    	System.out.println(access_Token);
 		        session.setAttribute("email", userInfo.get("email"));
 		        session.setAttribute("access_Token", access_Token);
 		    }
@@ -237,11 +240,12 @@ public class UserController {
 		@RequestMapping(value = "/oauthLogout")
 		public String oauthLogout(HttpSession session) {
 			
-			System.out.println("kakao LOGOUT START :");
+			System.out.println("kakao LOGOUT START token : "+session.getAttribute("access_Token"));
+			System.out.println("kakao LOGOUT  email : "+session.getAttribute("email"));
+			
 			
 		    kakao.kakaoLogout((String)session.getAttribute("access_Token"));
-		    session.removeAttribute("access_Token");
-		    session.removeAttribute("userId");
+		    session.invalidate();
 		    
 		    return "/index.jsp";
 		}

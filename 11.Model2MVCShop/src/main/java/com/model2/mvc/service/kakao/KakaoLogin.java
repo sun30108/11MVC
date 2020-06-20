@@ -81,6 +81,7 @@ public class KakaoLogin {
     public void kakaoLogout(String access_Token) {
     	
     	System.out.println("kakao LogOut method ");
+    	System.out.println("LogOut acToken : "+access_Token);
     	
         String reqURL = "https://kapi.kakao.com/v1/user/logout";
         try {

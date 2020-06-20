@@ -88,6 +88,7 @@
 	             
 	             <ul class="nav navbar-nav navbar-right">
 	                <li><a href="#">·Î±×¾Æ¿ô</a></li>
+	                <li><a href="#">LogOut</a></li>
 	            </ul>
 		</div>
 		<!-- dropdown hover END -->	       
@@ -106,6 +107,12 @@
 		 	$("a:contains('·Î±×¾Æ¿ô')").on("click" , function() {
 				$(self.location).attr("href","/user/logout");
 				//self.location = "/user/logout"
+			}); 
+		 });
+		//============kakao logout Ã³¸® ==============
+		$(function() {
+		 	$("a:contains('LogOut')").on("click" , function() {
+				$(self.location).attr("href","/user/oauthLogout");
 			}); 
 		 });
 		
