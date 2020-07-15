@@ -88,7 +88,11 @@
 	             
 	             <ul class="nav navbar-nav navbar-right">
 	                <li><a href="#">로그아웃</a></li>
-	                <li><a href="#">LogOut</a></li>
+	                <li><a href="#">kakaoLogOut</a></li>
+	                <li><a href="#">EmailLogOut</a></li>
+	                <li><a href="#">연결끊기</a></li>
+	                <li><a href="#">differentEmailLogin</a></li>
+	                
 	            </ul>
 		</div>
 		<!-- dropdown hover END -->	       
@@ -111,10 +115,29 @@
 		 });
 		//============kakao logout 처리 ==============
 		$(function() {
-		 	$("a:contains('LogOut')").on("click" , function() {
+		 	$("a:contains('kakaoLogOut')").on("click" , function() {
 				$(self.location).attr("href","/user/oauthLogout");
 			}); 
 		 });
+		
+		//============kakao EmailLogout 처리 ===========
+		$(function(){
+			$("a:contains('EmailLogOut')").on("click", function(){
+				$(self.location).attr("href", "https://kauth.kakao.com/oauth/logout?client_id=1d004210b71f438f6c08da48d2b57cab&logout_redirect_uri=http://localhost:8080/user/oauthLogout");
+			})
+		})
+		//=========kakao 연결끊기===========//
+		$(function(){
+			$("a:contains('연결끊기')").on("click", function(){
+				$(self.location).attr("href", "/user/oauthUnlink");
+			})
+		})
+		//=========다른계정 로그인===========//
+		$(function(){
+			$("a:contains('differentEmailLogin')").on("click", function(){
+				$(self.location).attr("href", "/user/differentEmailLogin");
+			})
+		})
 		
 		//============= 회원정보조회 Event  처리 =============	
 		 $(function() {

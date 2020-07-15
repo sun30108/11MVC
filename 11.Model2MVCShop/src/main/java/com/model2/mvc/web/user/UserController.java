@@ -188,6 +188,7 @@ public class UserController {
 	    public String kakaologin(@RequestParam("code") String code,HttpSession session, Model model, HttpServletRequest request)throws Exception{
 			
 			System.out.println("kakao Login oauth get code : GET");
+			System.out.println("kakao Login code : "+code);
 			
 			String access_Token = kakao.getAccessToken(code);
 			
@@ -224,7 +225,6 @@ public class UserController {
 		    }
 		    
 		    System.out.println("APIUser Info : "+apiUser);
-		    model.addAttribute("accessToken",access_Token);
 
 		    //login logic 진행
 		    User dbUser=userService.getUser(apiUser.getUserId());
@@ -247,7 +247,29 @@ public class UserController {
 		    kakao.kakaoLogout((String)session.getAttribute("access_Token"));
 		    session.invalidate();
 		    
-		    return "/index.jsp";
+		    return "redirect:/index.jsp";
+		}
+	//카카오 연결끊기(연동해제)
+		@RequestMapping(value = "/oauthUnlink")
+		public String oauthUnlink(HttpSession session) {
+			
+			System.out.println("KAKAO UNLINK");
+			
+			kakao.kakaoUnlink((String)session.getAttribute("access_Token"));
+			
+			return "/user/logout";
+		}
+	//다른 계정으로 로그인0
+		@RequestMapping(value = "/differentEmailLogin")
+		public String differentEmailLogin(HttpSession session) {
+			
+			System.out.println("KAKAO DIFFERENT LOGIN");
+			
+			kakao.kakaoUnlink((String)session.getAttribute("access_Token"));
+			
+			session.invalidate();
+			
+			return "redirect:"+kakao.differentEmailLogin();
 		}
 		///
 }

@@ -35,7 +35,7 @@
 			$("#userId").focus();
 			
 			//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-			$("button").on("click" , function() {
+			$("button[name='login']").on("click" , function() {
 				var id=$("input:text").val();
 				var pw=$("input:password").val();
 				
@@ -62,6 +62,12 @@
 			$("a[href='#' ]").on("click" , function() {
 				self.location = "/user/addUser"
 			});
+		});
+		//============카카오 로그인==========//
+		$( function() {
+			$("#kakaoLogin").on("click", function(){
+				self.location = "https://kauth.kakao.com/oauth/authorize?client_id=1d004210b71f438f6c08da48d2b57cab&redirect_uri=http://localhost:8080/user/oauth&response_type=code";
+			})
 		});
 		
 	</script>		
@@ -112,10 +118,9 @@
 					  
 					  <div class="form-group">
 					    <div class="col-sm-offset-4 col-sm-6 text-center">
-					      <button type="button" class="btn btn-primary"  >로 &nbsp;그 &nbsp;인</button>
+					      <button type="button" class="btn btn-primary"  name="login">로 &nbsp;그 &nbsp;인</button>
 					      <a class="btn btn-primary btn" href="#" role="button">회 &nbsp;원 &nbsp;가 &nbsp;입</a>
-					      <a class="btn btn-primary btn"
-					       href="https://kauth.kakao.com/oauth/authorize?client_id=1d004210b71f438f6c08da48d2b57cab&redirect_uri=http://localhost:8080/user/oauth&response_type=code">카카오로그인</a>
+					      <a id="kakaoLogin"><img src="../images/uploadFiles/kakao_login_medium_narrow.png"></a>
 					    </div>
 					  </div>
 			
